@@ -1,0 +1,41 @@
+# build / cmake
+build*/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+Makefile
+compile_commands.json
+
+# Qt / qmake / autogen
+.moc/
+*_autogen/
+.qrc.depends
+.qmake.stash
+*.qmlc
+*.jsc
+
+# Qt Creator user settings
+*.user
+*.pro.user*
+*.qbs.user*
+
+# Бинарники и логи
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+*.exe
+*.pdb
+*.ilk
+*.log
+*.cache
+
+# IDE/OS
+.vscode/
+.idea/
+.vs/
+.DS_Store
+Thumbs.db
