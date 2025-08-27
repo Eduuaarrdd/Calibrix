@@ -15,9 +15,6 @@ stepconfigdialog::stepconfigdialog(QWidget *parent) :
     //Подключение кнопки сохранить
     connect(ui->btnSave,   &QPushButton::clicked, this, &stepconfigdialog::Save);
 
-    // кнопка «Выйти без сохранения»
-    connect(ui->btnCancel, &QPushButton::clicked, this, &stepconfigdialog::Cancel);
-
     // кнопка «По умолчанию» — вернуть изначальные значения
     connect(ui->btnDefault,&QPushButton::clicked, this, &stepconfigdialog::Default);
 

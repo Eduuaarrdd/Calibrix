@@ -1,0 +1,61 @@
+[33mcommit 396bf6f7c36e24e0ec04f660bd78d9576eaceac8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Eduard <Eduuaarrdd@yandex.ru>
+Date:   Tue Aug 26 18:39:24 2025 +0300
+
+    Calibrix 1.0: initial import
+
+ .gitattributes                  |  37 [32m++[m
+ .gitignore                      |  41 [32m++[m
+ Calibrix.pro                    |  73 [32m+++[m
+ accuracy/accuracycalculator.cpp | 168 [32m+++++++[m
+ accuracy/accuracycalculator.h   |  52 [32m+++[m
+ accuracy/accuracydatasaver.cpp  |  91 [32m++++[m
+ accuracy/accuracydatasaver.h    |  19 [32m+[m
+ accuracy/accuracystate.cpp      |  14 [32m+[m
+ accuracy/accuracystate.h        |  35 [32m++[m
+ accuracy/accuracyvisualizer.cpp | 973 [32m++++++++++++++++++++++++++++++++++++++++[m
+ accuracy/accuracyvisualizer.h   | 128 [32m++++++[m
+ accuracy/accuracywindow.cpp     | 173 [32m+++++++[m
+ accuracy/accuracywindow.h       |  48 [32m++[m
+ accuracy/accuracywindow.ui      | 209 [32m+++++++++[m
+ accuracywindow.cpp              |   0
+ appstate.cpp                    |  17 [32m+[m
+ appstate.h                      |  43 [32m++[m
+ autoconfigdialog.cpp            |  61 [32m+++[m
+ autoconfigdialog.h              |  34 [32m++[m
+ autoconfigdialog.ui             | 188 [32m++++++++[m
+ automeasurement.cpp             | 376 [32m++++++++++++++++[m
+ automeasurement.h               | 131 [32m++++++[m
+ averagefilter.cpp               |  18 [32m+[m
+ averagefilter.h                 |  16 [32m+[m
+ calculatemesurement.cpp         | 215 [32m+++++++++[m
+ calculatemesurement.h           |  85 [32m++++[m
+ databuffer.cpp                  |  41 [32m++[m
+ databuffer.h                    |  27 [32m++[m
+ datameasurement.cpp             | 290 [32m++++++++++++[m
+ datameasurement.h               |  65 [32m+++[m
+ datavisualizer.cpp              | 441 [32m++++++++++++++++++[m
+ datavisualizer.h                | 107 [32m+++++[m
+ expectationfilter.cpp           |  42 [32m++[m
+ expectationfilter.h             |  18 [32m+[m
+ filemanager.cpp                 |  45 [32m++[m
+ filemanager.h                   |  24 [32m+[m
+ filter.cpp                      |  25 [32m++[m
+ filter.h                        |  28 [32m++[m
+ main.cpp                        |  11 [32m+[m
+ mainwindow.cpp                  | 397 [32m++++++++++++++++[m
+ mainwindow.h                    |  53 [32m+++[m
+ mainwindow.ui                   | 287 [32m++++++++++++[m
+ nonefilter.cpp                  |  18 [32m+[m
+ nonefilter.h                    |  18 [32m+[m
+ pyproc.cpp                      |  93 [32m++++[m
+ pyproc.h                        |  34 [32m++[m
+ scripts/parser_loop.py          |  25 [32m++[m
+ scripts/parser_loop_no.py       |  27 [32m++[m
+ settingsmanager.cpp             |  74 [32m+++[m
+ settingsmanager.h               |  89 [32m++++[m
+ stepconfigdialog.cpp            | 179 [32m++++++++[m
+ stepconfigdialog.h              |  49 [32m++[m
+ stepconfigdialog.ui             | 626 [32m++++++++++++++++++++++++++[m
+ typemeasurement.h               |  41 [32m++[m
+ 54 files changed, 6419 insertions(+)
