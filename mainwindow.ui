@@ -164,7 +164,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Авто сохранение</string>
+           <string>Автосохранение</string>
           </property>
          </widget>
         </item>

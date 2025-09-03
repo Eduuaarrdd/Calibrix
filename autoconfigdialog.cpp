@@ -9,7 +9,6 @@ autoconfigdialog::autoconfigdialog(QWidget *parent)
     setFixedSize(this->size());
 
     connect(ui->btn_save,    &QPushButton::clicked, this, &autoconfigdialog::Save);
-    connect(ui->btn_cancel,  &QPushButton::clicked, this, &autoconfigdialog::Cancel);
     connect(ui->btn_default, &QPushButton::clicked, this, &autoconfigdialog::Default);
 }
 
