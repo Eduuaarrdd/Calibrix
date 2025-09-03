@@ -55,6 +55,7 @@ void AccuracyVisualizer::setWidgets(QTableWidget* input, QTableWidget* result)
         << "Повторяемость при подходе −, мм (R⁻)"
         << "Повторяемость двунаправленная, мм (Rᵢ)";
     resultTable->setHorizontalHeaderLabels(labels);
+    resultTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
     // ───── Тултипы (формулы кратко) ─────
     auto setHdrTip = [&](int col, const QString& tip){

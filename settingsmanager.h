@@ -20,27 +20,26 @@ enum class StepMode {
 
 // ——— Настройки шагов ———
 struct StepSettings {
-    StepMode mode = StepMode::None;
+    StepMode mode = StepMode::Uniform;
     double base = 0.0;
 
-    double step = 1.0;
-    int count = 10;
+    double step = 20.0;      // размер шага
+    int count = 5;           // кол-во шагов
 
     QString manualText;
     QString formula;
     int formulaCount = 10;
 
-    int repeatCount = 1;
+    int repeatCount = 5;     // кол-во измерений
 
-    bool bidirectional = false;
+    bool bidirectional = true; // двунаправленное измерение
 };
 
-// ——— Настройки автосохранения ———
 struct AutoSaveSettings {
-    bool autoGroup = false;          // radio_autoGroup
-    double positiveTolerance = 0.002; // spin_positiveTolerance
-    double negativeTolerance = 0.002; // spin_negativeTolerance
-    double speedLimit = 0.01;         // spin_speedLimit
+    bool autoGroup = true;           // автосохранение всей группы шагов
+    double positiveTolerance = 0.07; // верхний предел погрешности
+    double negativeTolerance = 0.07; // нижний предел погрешности
+    double speedLimit = 0.01;        // порог скорости
 };
 
 // ——— Менеджер ———
@@ -79,7 +78,7 @@ private:
     bool m_stepSettingsSet = false;
     bool m_autoRepeatEnabled = false;
 
-    int m_saveTime = 5;
+    int m_saveTime = 2;
 
     AutoSaveSettings m_autoSaveSettings;
 };

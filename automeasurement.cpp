@@ -32,11 +32,11 @@ AutoSavePlan AutoMeasurement::createPlan(const StepSettings& step_setting,
     plan.cfg.positiveTolerance = auto_setting.positiveTolerance;
     plan.cfg.negativeTolerance = auto_setting.negativeTolerance;
     plan.cfg.speedLimit        = auto_setting.speedLimit;
-    plan.cfg.speedWindow       = 12;
-    plan.cfg.speedStride       = 3;
+    plan.cfg.speedWindow       = 30;
+    plan.cfg.speedStride       = 5;
     plan.cfg.exitHysteresis    = 1.5;
-    plan.cfg.stableTicks       = 8;
-    plan.cfg.cooldownTicks     = 8;
+    plan.cfg.stableTicks       = 15;
+    plan.cfg.cooldownTicks     = 15;
     plan.cfg.exitSpeedMul      = 2.0;
     plan.cfg.exitDistance      = 0.005;
 
@@ -206,8 +206,13 @@ void AutoMeasurement::OnState(State s)
         if (m_cooldownLeft > 0) { --m_cooldownLeft; scheduleNext(State::InZoneSearch); break; }
 
         // --- если и зона, и скорость ок → переходим в Save
-        const bool zoneOk  = isZoneCorrect(distance, expected);
-        const bool speedOk = isSpeedCorrect();
+        const bool zoneOk = isZoneCorrect(distance, expected);
+        bool speedOk = false;
+
+        // Проверку скорости делаем только внутри зоны
+        if (zoneOk) {
+            speedOk = isSpeedCorrect();
+        }
         if (zoneOk && speedOk) {
             m_state = State::Save;
             scheduleNext(State::Save);                               // перейдём к триггеру сейва
