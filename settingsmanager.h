@@ -39,7 +39,7 @@ struct AutoSaveSettings {
     bool autoGroup = true;           // автосохранение всей группы шагов
     double positiveTolerance = 0.07; // верхний предел погрешности
     double negativeTolerance = 0.07; // нижний предел погрешности
-    double speedLimit = 0.01;        // порог скорости
+    double speedLimit = 0.03;        // порог скорости
 };
 
 // ——— Менеджер ———
