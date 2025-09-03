@@ -43,14 +43,14 @@ MainWindow::MainWindow(QWidget *parent)
     ui->actionBidirectional->setChecked(settingsManager->stepSettings().bidirectional);
 
     // Регистрируем фильтры
+    settingsManager->registerFilter("Без фильтра", ui->actionNoneFilter, []() {
+        return new NoneFilter();
+    });
     settingsManager->registerFilter("Среднее арифметическое", ui->actionAverageFilter, []() {
         return new AverageFilter();
     });
     settingsManager->registerFilter("Фильтр с интерквартильным отклонением", ui->actionExpectationFilter, []() {
         return new ExpectationFilter();
-    });
-    settingsManager->registerFilter("Без фильтра", ui->actionNoneFilter, []() {
-        return new NoneFilter();
     });
 
     // Создаём фильтр по умолчанию
@@ -215,7 +215,7 @@ void MainWindow::onAppStateChanged(ProgramState state)
 
     case ProgramState::Measuring: {
         if (!pyProc->isRunning())
-            pyProc->start("C:/MY/HMIv2/scripts/parser_loop.py");
+            pyProc->start("C:/MY/Calibrix/scripts/parser_loop.py");
         visualizer->setMeasuringView();
         if (autoSaver && autoSaver->isRunning()) autoSaver->stop();
         break;
@@ -257,7 +257,7 @@ void MainWindow::onAppStateChanged(ProgramState state)
             // 3) Сохраняем в SettingsManager
             settingsManager->setStepSettings(dlg.currentSettings());
             dataMeasurement->setStepSettings(settingsManager->stepSettings());
-
+//ВОТ ТУТ РЕАЛИЗАЦИЯ РАБОТЫ С ПЛАНОМ
             // Перестраиваем визуализацию под новые настройки
             visualizer->addSavedValue(dataMeasurement->groups());
         }

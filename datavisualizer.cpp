@@ -433,7 +433,7 @@ void DataVisualizer::resetAutoButton()
 {
     if (!m_autoButton) return;
     m_autoButton->setEnabled(true);
-    m_autoButton->setText("АВТОСОХРАНЕНИЕ");
+    m_autoButton->setText("Автосохранение");
     m_autoButton->setStyleSheet("");    // дефолтная серая
     m_startButton->setEnabled(true);
      m_pauseButton->setEnabled(true);
