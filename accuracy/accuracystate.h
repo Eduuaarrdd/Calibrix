@@ -9,6 +9,7 @@ enum class AccuracyWindowState {
     Resetting,
     Saving,
     Calculating,
+    Exporting,
     Error
 };
 

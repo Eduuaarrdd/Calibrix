@@ -20,9 +20,9 @@ noise_low_mm   = -0.002
 noise_high_mm  =  0.002
 
 # погрешность при остановке (мм)
-error_sigma_mm = 0.09
-error_low_mm   = -0.09
-error_high_mm  =  0.09
+error_sigma_mm = 0.05
+error_low_mm   = -0.05
+error_high_mm  =  0.05
 
 # ------------------ КОНВЕРТАЦИЯ В МЕТРЫ ------------------
 

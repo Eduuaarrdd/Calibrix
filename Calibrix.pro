@@ -24,6 +24,7 @@ SOURCES += \
     datameasurement.cpp \
     datavisualizer.cpp \
     expectationfilter.cpp \
+    exportmanager.cpp \
     filemanager.cpp \
     filter.cpp \
     main.cpp \
@@ -48,6 +49,7 @@ HEADERS += \
     datameasurement.h \
     datavisualizer.h \
     expectationfilter.h \
+    exportmanager.h \
     filemanager.h \
     filter.h \
     mainwindow.h \

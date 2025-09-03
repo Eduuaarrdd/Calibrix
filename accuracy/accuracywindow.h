@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "datameasurement.h"
 #include "accuracystate.h"
+#include "exportmanager.h"
 
 class AccuracyVisualizer;
 namespace Ui { class AccuracyWindow; }
@@ -33,6 +34,8 @@ private slots:
 
     void onCellEdited(int row, int column);
 
+    void onExportClicked();
+
 
 private:
     Ui::AccuracyWindow* ui = nullptr;
@@ -41,6 +44,10 @@ private:
 
     DataMeasurement measurement;
     double basePoint = 0.0;
+
+    ExportManager* exportManager = nullptr;
+    DataMeasurement lastTempMeasurement;
+    AccuracyResultList lastResults;
 };
 
 #endif // ACCURACYWINDOW_H

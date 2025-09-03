@@ -10,7 +10,8 @@ AccuracyWindow::AccuracyWindow(QWidget* parent)
     : QMainWindow(parent),
     ui(new Ui::AccuracyWindow),
     state(new AccuracyState(this)),
-    visualizer(new AccuracyVisualizer(this))
+    visualizer(new AccuracyVisualizer(this)),
+    exportManager(new ExportManager(this))
 {
     ui->setupUi(this);
 
@@ -44,7 +45,8 @@ AccuracyWindow::AccuracyWindow(QWidget* parent)
     //Редактирование ячейки
     connect(ui->inputTable, &QTableWidget::cellChanged, this, &AccuracyWindow::onCellEdited);
 
-
+    //Привязка кнопки Экспорт
+    connect(ui->exportButton, &QPushButton::clicked, this, &AccuracyWindow::onExportClicked);
 }
 
 AccuracyWindow::~AccuracyWindow()
@@ -111,10 +113,32 @@ void AccuracyWindow::onStateChanged(AccuracyWindowState s)
         // 4. Показываем результаты пользователю
         visualizer->setResultTable(results);
 
+
         // 5. Сохраняем в history (можно потом использовать)
          //dataSaver.appendResult(tempMeasurement, results);
 
-        // 6. Назад в Idle
+        // 6. сохранить локально для экспорта
+        lastTempMeasurement = tempMeasurement;
+        lastResults = results;
+
+        // 7. Назад в Idle
+        state->setState(AccuracyWindowState::Idle);
+        break;
+    }
+
+    case AccuracyWindowState::Exporting:
+    {
+        // если calculating ещё не выполнялся — запретить экспорт
+        if (lastResults.isEmpty()) {
+            QMessageBox::warning(this, "Экспорт невозможен",
+                                 "Сначала выполните расчёт (Кнопка «Рассчитать»).");
+            state->setState(AccuracyWindowState::Idle);
+            break;
+        }
+
+        // ok — экспорт по последним локально сохранённым данным
+        exportManager->exportAccuracyCsv(this, lastTempMeasurement, lastResults);
+
         state->setState(AccuracyWindowState::Idle);
         break;
     }
@@ -170,4 +194,9 @@ void AccuracyWindow::onCellEdited(int row, int column)
 {
     visualizer->onCellEdited(row, column);
     state->setState(AccuracyWindowState::Editing);
+}
+
+void AccuracyWindow::onExportClicked()
+{
+    state->setState(AccuracyWindowState::Exporting);
 }
