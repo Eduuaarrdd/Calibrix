@@ -30,6 +30,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     nonefilter.cpp \
+    plangenerator.cpp \
     pyproc.cpp \
     settingsmanager.cpp \
     stepconfigdialog.cpp
@@ -54,6 +55,7 @@ HEADERS += \
     filter.h \
     mainwindow.h \
     nonefilter.h \
+    plangenerator.h \
     pyproc.h \
     settingsmanager.h \
     stepconfigdialog.h \

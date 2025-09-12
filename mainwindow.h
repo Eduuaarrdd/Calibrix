@@ -13,6 +13,8 @@
 #include "settingsmanager.h"
 #include "datameasurement.h"
 #include "automeasurement.h"
+#include "plangenerator.h"
+
 
 
 QT_BEGIN_NAMESPACE
@@ -45,6 +47,7 @@ private:
     DataMeasurement* dataMeasurement;
     AutoMeasurement* autoSaver = nullptr;
     void addTimeSetting();  // настройка строки времени измерения в меню
+    PlanGenerator planGen;
 };
 
 #endif // MAINWINDOW_H

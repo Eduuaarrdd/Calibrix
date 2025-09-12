@@ -207,9 +207,16 @@ void MainWindow::onAppStateChanged(ProgramState state)
         visualizer->setIdleView();
         buffer->clear();
         if (autoSaver && autoSaver->isRunning()) autoSaver->stop();
+
         // Установка актуальных настроек шагов
-        StepSettings settings = settingsManager->stepSettings();
-        dataMeasurement->setStepSettings(settings);
+        // Инициализация базового плана по актуальным настройкам
+        const StepSettings settings = settingsManager->stepSettings();
+        planGen.makeBase(settings);
+
+        // Сразу подготовим и применим текущий PlanSave в измерение
+        if (auto saveHandle = planGen.makeSave()) {
+            dataMeasurement->applyPlanSave(saveHandle);
+        }
         break;
     }
 
@@ -256,8 +263,12 @@ void MainWindow::onAppStateChanged(ProgramState state)
 
             // 3) Сохраняем в SettingsManager
             settingsManager->setStepSettings(dlg.currentSettings());
-            dataMeasurement->setStepSettings(settingsManager->stepSettings());
-//ВОТ ТУТ РЕАЛИЗАЦИЯ РАБОТЫ С ПЛАНОМ
+
+            // Пересобираем Base и выдаём новый Save в измерение
+            planGen.makeBase(settingsManager->stepSettings());
+            if (auto saveHandle = planGen.makeSave()) {
+                dataMeasurement->applyPlanSave(saveHandle);
+            }
             // Перестраиваем визуализацию под новые настройки
             visualizer->addSavedValue(dataMeasurement->groups());
         }

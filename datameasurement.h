@@ -1,65 +1,86 @@
 #ifndef DATAMEASUREMENT_H
 #define DATAMEASUREMENT_H
 
-#include <QVector>                      // контейнер для данных
-#include <QString>                      // строки для настроек
-#include "typemeasurement.h"            // Measurement*, Direction, Group types
+#include <QVector>
+#include <QSharedPointer>
+#include <limits>
+#include "typemeasurement.h"
+#include "plangenerator.h"
 
-// основное хранилище и логика добавления
+// Исполнитель плана: хранит группы/серии/измерения и записывает новые значения по PlanSave
 class DataMeasurement
 {
 public:
-    DataMeasurement() = default;                              // пустой конструктор
+    DataMeasurement() = default;
 
-    void setStepSettings(const StepSettings& settings);       // поставить настройки
-    bool isStepStructureChanged(const StepSettings& oldS,     // публичная проверка структуры
-                                const StepSettings& newS) const;
+    // Применить (или пере-применить) план
+    void applyPlanSave(QSharedPointer<const PlanSave> plan);
 
-    void add(double value);                                   // добавить новое значение
-    void clear();                                             // очистить всё
-    void setGroups(const QVector<MeasurementGroup>& groups);  // загрузить группы
-    const QVector<MeasurementGroup>& groups() const { return m_groups; } // доступ к данным
+    // Добавить одно измерение (сырое значение после фильтра)
+    void add(double value);
+
+    // Очистить всё
+    void clear();
+
+    // Внешняя загрузка групп (например, из файла)
+    void setGroups(const QVector<MeasurementGroup>& groups);
+
+    // Доступ к складу
+    const QVector<MeasurementGroup>& groups() const { return m_groups; }
 
 private:
-    // действия верхнего уровня (add)
-    enum class AddAction { NewGroup, NewStep, ContinueStep }; // что делать в add
-    // действия для шага (startNewStep)
-    enum class StepAction { StartStep, ContinueStepPlus, ContinueStepMinus, ContinueStepConst }; // как менять номер шага
+    // ------------------------
+    // Снимок текущего элемента плана для выполнения
+    // ------------------------
+    struct ElementSnapshot {
+        SaveAction        action      = SaveAction::Measurement;
+        int               stepNumber  = PlanGenConst::kStepNone;
+        double            expected    = std::numeric_limits<double>::quiet_NaN();
+        int               address     = 0;
+        ApproachDirection direction   = ApproachDirection::Unknown;
+        double            value       = 0.0;  // сырое входное значение для записи
+    };
 
-    // активные настройки
-    StepSettings m_settings{};                                // текущие настройки
-    StepSettings m_prevSettings{};                            // предыдущие настройки
+    ElementSnapshot m_snap; // единственный снимок текущего элемента плана
 
-    // склад измерений
-    QVector<MeasurementGroup> m_groups;                       // все группы
+    // ------------------------
+    // Внутреннее состояние
+    // ------------------------
+    QVector<MeasurementGroup>      m_groups;             // склад
+    int                            m_groupIdCounter = 0; // автонумерация групп
 
-    // состояние конвейера
-    int  m_currentStep   = 0;                                 // текущий номер шага
-    int  m_currentRepeat = 0;                                 // текущий повтор
-    int  m_groupIdCounter = 0;                                // счётчик id групп
+    QSharedPointer<const PlanSave> m_plan;               // активный план
+    int                            m_cursor = 0;         // индекс текущего элемента плана
+    bool                           m_firstPass = true;   // первый проход после смены структуры
 
-    // флаги изменений
-    bool m_stepStructureChanged = false;                      // изменились поля структуры шагов
-    bool m_baseChanged = false;                               // изменилась базовая точка
+    quint64                        m_prevStructureHash = 0;  // для change=2
+    double                         m_prevBase = std::numeric_limits<double>::quiet_NaN(); // для change=1
 
-    // выбор действия для add
-    AddAction  logicalAdd() const;                            // решить что делать в add
-    // выбор действия для шага
-    StepAction logicalStartNewStep() const;                   // решить как менять номер шага
+    // ------------------------
+    // Основные шаги конвейера
+    // ------------------------
+    int  detectChange() const;                        // 0 — нет, 1 — изменилась база, 2 — изменилась структура
+    void takeSnapshot(double value);                  // заполнить снимок из m_plan[m_cursor] (с учётом NONE/firstPass)
+    void advanceCursor();                             // сдвинуть курсор и управлять m_firstPass
 
-    // создать новую группу и сразу начать шаг
-    void startNewGroup(double firstValue);                    // создать группу и записать первое значение
-    // начать новый шаг и записать первое значение
-    void startNewStep(double firstValue);                     // создать шаг и записать значение
-    // добавить один повтор в текущий шаг
-    void addNewMeasurement(double value);                     // записать измерение
+    // Операции по снимку
+    void startNewGroup();     // создать группу
+    void startNewStep();      // создать серию
+    void addNewMeasurement(); // добавить измерение
 
-    // быстрый доступ к текущим элементам
-    MeasurementGroup&  currentGroup();                        // последняя группа
-    MeasurementSeries& currentSeries();                       // последний шаг
-    const MeasurementGroup&  currentGroup() const;            // последняя группа
-    const MeasurementSeries& currentSeries() const;           // последний шаг
+    // Пересчёт при смене базы (только текущая группа)
+    void recalcCurrentGroupByBaseAndPlan();
+
+    // Хелперы по текущим контейнерам
+    bool hasGroup() const { return !m_groups.isEmpty(); }
+    MeasurementGroup& currentGroup() { return m_groups.last(); }
+    const MeasurementGroup& currentGroup() const { return m_groups.last(); }
+    MeasurementSeries& currentSeries() { return m_groups.last().steps.last(); }
+    const MeasurementSeries& currentSeries() const { return m_groups.last().steps.last(); }
+
+    // Хелперы для NONE
+    int  maxStepNumberInCurrentGroup() const;
+    int  maxAddressInCurrentGroup() const;
 };
 
 #endif // DATAMEASUREMENT_H
-
